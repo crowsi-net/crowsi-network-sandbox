@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "crowsi://network/isolation-capability/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "mechanism",
+    "platform",
+    "environment_cleared",
+    "finite_timeout",
+    "user_namespace",
+    "network_namespace",
+    "mount_namespace",
+    "filesystem_isolation",
+    "external_actions"
+  ],
+  "properties": {
+    "schema": { "const": "crowsi://network/isolation-capability/v1" },
+    "mechanism": { "const": "linux-user-network-namespace" },
+    "platform": { "const": "linux" },
+    "environment_cleared": { "const": true },
+    "finite_timeout": { "const": true },
+    "user_namespace": { "const": true },
+    "network_namespace": { "const": true },
+    "mount_namespace": { "const": false },
+    "filesystem_isolation": { "const": false },
+    "external_actions": { "const": false }
+  }
+}
