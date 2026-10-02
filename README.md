@@ -1,26 +1,28 @@
-# Crowsi Network Sandbox
+# crowsi-network-sandbox
 
-Reusable Linux command boundary extracted from Ecosystem Control. It clears the
-ambient environment, forces Cargo and npm offline modes, applies a finite
-timeout, and runs a command through:
+Run a finite command in a Linux environment with a separate network namespace and bounded resources.
 
-```text
-unshare --user --map-current-user --net --
+## What you can do
+
+- Use an explicit offline command policy.
+- Bound runtime and clean the command environment.
+
+## Current scope
+
+Linux namespace support and reviewed command configuration are required. This is a command sandbox, not a general deployment service.
+
+Package distribution is not activated by this documentation. Use the checked-in source and the declared dependency versions; published availability must be verified separately.
+
+## Getting started
+
+Install Rust 1.97 or newer and make the declared dependencies available. Use the configured private registry when a dependency is not distributed publicly. Run from this repository:
+
+```sh
+cargo test --locked
 ```
 
-`inspect` reports the declared capability without executing a child. `probe`
-runs `/usr/bin/true` inside the namespaces to verify host support.
-The requested executable is opened with `O_NOFOLLOW`, validated, and inherited
-as a pinned descriptor; sandboxed commands intentionally receive no interactive
-standard input. The fixed boundary tools must not be owned by the sandbox OS
-identity.
+## Documentation and source
 
-```bash
-cargo run -- inspect
-cargo run -- probe
-cargo test
-```
+[Usage guide](docs/getting-started.md)
 
-This is network isolation, not a container sandbox. It does not create mount,
-PID, seccomp, capability, or filesystem boundaries. Incus Projects and
-Networks provide the separate server/workload boundary; Crowsi monitors both.
+[Schemas](schemas) · [Implementation and public interfaces](src) · [Verification cases](tests) · [Contributing](CONTRIBUTING.md) · [Security reporting](SECURITY.md) · [License](LICENSE) · [Attribution notices](NOTICE)
