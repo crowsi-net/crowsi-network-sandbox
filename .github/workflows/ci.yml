@@ -14,17 +14,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Install isolated workload test prerequisites
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends meson ninja-build pkg-config libcap-dev python3
-          git init "$RUNNER_TEMP/bubblewrap-source"
-          git -C "$RUNNER_TEMP/bubblewrap-source" fetch --depth=1 https://github.com/containers/bubblewrap 719a4fd474d44b26906bcf2b1b0fb6eddd8d56d0
-          git -C "$RUNNER_TEMP/bubblewrap-source" checkout --detach FETCH_HEAD
-          test "$(git -C "$RUNNER_TEMP/bubblewrap-source" rev-parse HEAD)" = 719a4fd474d44b26906bcf2b1b0fb6eddd8d56d0
-          meson setup "$RUNNER_TEMP/bubblewrap-build" "$RUNNER_TEMP/bubblewrap-source" -Dman=disabled -Dtests=false -Dbash_completion=disabled -Dzsh_completion=disabled
-          meson compile -C "$RUNNER_TEMP/bubblewrap-build"
-          sudo install -m 0755 "$RUNNER_TEMP/bubblewrap-build/bwrap" /usr/bin/bwrap
-          /usr/bin/bwrap --version
+        run: bash scripts/ci/build-bubblewrap.sh
       - name: Install declared Rust toolchain
         run: rustup toolchain install 1.97 --profile minimal --component rustfmt --component clippy
       - name: Test mechanisms and actual workload isolation

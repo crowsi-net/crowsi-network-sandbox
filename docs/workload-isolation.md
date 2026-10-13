@@ -28,3 +28,9 @@ Real integration tests use temporary synthetic data and a local fixture listener
 Bubblewrap is an external OS prerequisite, not vendored source: [upstream security model](https://github.com/containers/bubblewrap). No live account, persistent credential, production service or timer is used by these tests.
 
 CI pins the hosted Ubuntu 22.04 namespace-capable test environment and builds official bubblewrap 0.13.0 from exact source `719a4fd474d44b26906bcf2b1b0fb6eddd8d56d0` inside that disposable runner. Its old distribution package lacks the required `--size` option. The Ubuntu 24.04 hosted runner rejected bubblewrap loopback setup under its host policy; no host policy is weakened and no direct-execution fallback is enabled. Deployment owners must probe their own namespace policy before admitting workloads.
+
+## Native execute-port playground
+
+`cargo build --locked --example execute-port-worker` builds a one-shot bounded bridge over the same owned process/filesystem boundary. It takes an explicit canonical runtime and secret-free input directory, a maximum 4 KiB stdin request, and at most 4 KiB each of output/diagnostics. Timeout or excessive output stops/reaps the child; diagnostics are not emitted as authority results. This is an example adapter, not an installed daemon or new approval authority.
+
+The Crowsi transport repository's `playground/native-execute-port/verify.mjs` installs its packed public Node interface outside the checkout, sends only a registered execute request into this separate real worker, and checks denied host-file/env/network access, rejected approval injection, successful fake write/read-back and replay rejection. Runtime credentials and approval functions remain in the parent owner. No live account or persistent key is used.
