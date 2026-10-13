@@ -26,3 +26,5 @@ worker.shutdown(std::time::Duration::from_millis(100)).await?;
 Real integration tests use temporary synthetic data and a local fixture listener. They prove that the worker cannot read the synthetic host secret, see the host home or ambient secret, modify input or reach the host listener, and that an uncooperative worker can be stopped/reaped. They do not establish live provider IAM or native credential-daemon integration. Runtime/system libraries are intentionally readable; review the runtime image and public `/usr` content. CPU/memory policy beyond the finite execution timeout belongs to the deployment owner.
 
 Bubblewrap is an external OS prerequisite, not vendored source: [upstream security model](https://github.com/containers/bubblewrap). No live account, persistent credential, production service or timer is used by these tests.
+
+CI pins the hosted Ubuntu 22.04 namespace-capable test environment. The Ubuntu 24.04 hosted runner rejected bubblewrap loopback setup under its host policy; no host policy is weakened and no direct-execution fallback is enabled. Deployment owners must probe their own namespace policy before admitting workloads.
