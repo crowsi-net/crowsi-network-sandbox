@@ -1,0 +1,126 @@
+{
+  "repository": "crowsi-net/crowsi-network-sandbox",
+  "purpose": "Finite Linux network isolation and explicitly selected read-only workload filesystem boundaries.",
+  "responsibility_boundary": "The trusted owner chooses secret-free runtime/input and admits bounded stdio requests. No worker receives approval or credential authority; namespace support must actually be verified.",
+  "packages": [
+    {
+      "manifest": "Cargo.toml",
+      "package": "crowsi-network-sandbox",
+      "ecosystem": "rust",
+      "description": "Finite Linux user and network namespace command boundary for Crowsi",
+      "interfaces": {
+        "lib": "src/lib.rs",
+        "features": {},
+        "bins": [],
+        "public_modules": [],
+        "public_reexports": [
+          "model::{ISOLATION_SCHEMA, IsolationCapabilityV1}",
+          "runner::{IsolationBudget, isolated_command}",
+          "workload::isolated_workload"
+        ],
+        "implicit_bins": []
+      },
+      "declared_commands": {}
+    }
+  ],
+  "schema_definitions": [
+    "schemas/isolation-capability-v1.schema.json"
+  ],
+  "test_sources": [
+    "examples/execute-port-worker.rs",
+    "src/main.rs",
+    "tests/command_boundary.rs",
+    "tests/workload_isolation.rs",
+    "tests/workload_stop.rs"
+  ],
+  "example_sources": [
+    "examples/execute-port-worker.rs"
+  ],
+  "workflow_definitions": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "jobs": [
+        {
+          "job": "test",
+          "condition": null,
+          "runs_on": "ubuntu-22.04",
+          "steps": [
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "condition": null
+            },
+            {
+              "name": "Install isolated workload test prerequisites",
+              "run": "bash scripts/ci/build-bubblewrap.sh",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Install declared Rust toolchain",
+              "run": "rustup toolchain install 1.97 --profile minimal --component rustfmt --component clippy",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Test mechanisms and actual workload isolation",
+              "run": "cargo +1.97 test --locked --all-features",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Check source formatting",
+              "run": "cargo +1.97 fmt --all -- --check",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Check all public source targets",
+              "run": "cargo +1.97 clippy --locked --all-targets --all-features -- -D warnings",
+              "uses": null,
+              "condition": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": ".github/workflows/oss-policy.yml",
+      "jobs": [
+        {
+          "job": "repository-policy",
+          "condition": null,
+          "runs_on": "ubuntu-latest",
+          "steps": [
+            {
+              "name": null,
+              "run": null,
+              "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "condition": null
+            },
+            {
+              "name": "Verify repository policy",
+              "run": "python3 .github/oss-policy-check.py",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Verify policy regression tests",
+              "run": "cd .github && python3 -m unittest discover -s policy-tests",
+              "uses": null,
+              "condition": null
+            },
+            {
+              "name": "Check policy types",
+              "run": "python3 -m venv \"$RUNNER_TEMP/policy-types\"\n\"$RUNNER_TEMP/policy-types/bin/pip\" install -r .github/policy/requirements.txt\n\"$RUNNER_TEMP/policy-types/bin/mypy\" --strict .github/policy .github/oss-policy-check.py .github/policy-tests\n",
+              "uses": null,
+              "condition": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence_policy": "Declarations and source paths are not proof of an executed acceptance. Exact CI head and result are recorded separately. No live accounts or production acceptance is inferred."
+}
