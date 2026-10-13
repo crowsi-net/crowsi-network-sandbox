@@ -27,4 +27,4 @@ Real integration tests use temporary synthetic data and a local fixture listener
 
 Bubblewrap is an external OS prerequisite, not vendored source: [upstream security model](https://github.com/containers/bubblewrap). No live account, persistent credential, production service or timer is used by these tests.
 
-CI pins the hosted Ubuntu 22.04 namespace-capable test environment. The Ubuntu 24.04 hosted runner rejected bubblewrap loopback setup under its host policy; no host policy is weakened and no direct-execution fallback is enabled. Deployment owners must probe their own namespace policy before admitting workloads.
+CI pins the hosted Ubuntu 22.04 namespace-capable test environment and builds official bubblewrap 0.13.0 from exact source `719a4fd474d44b26906bcf2b1b0fb6eddd8d56d0` inside that disposable runner. Its old distribution package lacks the required `--size` option. The Ubuntu 24.04 hosted runner rejected bubblewrap loopback setup under its host policy; no host policy is weakened and no direct-execution fallback is enabled. Deployment owners must probe their own namespace policy before admitting workloads.
