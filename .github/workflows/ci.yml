@@ -7,13 +7,19 @@ permissions:
   contents: read
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+      - name: Install isolated workload test prerequisites
+        run: bash scripts/ci/build-bubblewrap.sh
       - name: Install declared Rust toolchain
-        run: rustup toolchain install 1.97 --profile minimal
-      - name: Test default features
-        run: cargo +1.97 test --locked
+        run: rustup toolchain install 1.97 --profile minimal --component rustfmt --component clippy
+      - name: Test mechanisms and actual workload isolation
+        run: cargo +1.97 test --locked --all-features
+      - name: Check source formatting
+        run: cargo +1.97 fmt --all -- --check
+      - name: Check all public source targets
+        run: cargo +1.97 clippy --locked --all-targets --all-features -- -D warnings

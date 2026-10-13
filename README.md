@@ -6,6 +6,9 @@ Run a finite command in a Linux environment with a separate network namespace an
 
 - Use an explicit offline command policy.
 - Bound runtime and clean the command environment.
+- Compose `isolated_workload` with the published `crowsi-process-adapter` owner: read-only reviewed input, no host home or credentials, isolated PID/network/mount namespaces and 16 MiB ephemeral scratch.
+
+[Workload boundary and example](docs/workload-isolation.md) · [Source contract](docs/oss-source-contract.md)
 
 ## Current scope
 
@@ -15,7 +18,7 @@ Package distribution is not activated by this documentation. Use the checked-in 
 
 ## Getting started
 
-Install Rust 1.97 or newer and make the declared dependencies available. Use the configured private registry when a dependency is not distributed publicly. Run from this repository:
+Install Rust 1.97 or newer and make the declared dependencies available. Third-party and `crowsi-process-adapter` dependencies resolve from public crates.io; no private registry or adjacent checkout is required. Run from this repository:
 
 ```sh
 cargo test --locked
