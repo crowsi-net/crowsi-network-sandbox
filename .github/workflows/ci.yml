@@ -13,7 +13,11 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+      - name: Install isolated workload test prerequisites
+        run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends bubblewrap python3
       - name: Install declared Rust toolchain
         run: rustup toolchain install 1.97 --profile minimal
-      - name: Test default features
-        run: cargo +1.97 test --locked
+      - name: Test mechanisms and actual workload isolation
+        run: cargo +1.97 test --locked --all-features
+      - name: Check source formatting
+        run: cargo +1.97 fmt --all -- --check

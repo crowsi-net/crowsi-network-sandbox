@@ -17,7 +17,7 @@ pub enum IsolationBudget {
 }
 
 impl IsolationBudget {
-    fn seconds(self) -> &'static str {
+    pub(crate) fn seconds(self) -> &'static str {
         match self {
             Self::Short => "30s",
             Self::Standard => "180s",
@@ -67,7 +67,7 @@ fn pin_executable(path: &Path) -> Result<File, String> {
     Ok(file)
 }
 
-fn validate_boundary_tool(path: &Path) -> Result<(), String> {
+pub(crate) fn validate_boundary_tool(path: &Path) -> Result<(), String> {
     let file = pin_executable(path)?;
     if file.metadata().map_err(inspect_error(path))?.uid() == effective_uid()? {
         return Err(format!(
