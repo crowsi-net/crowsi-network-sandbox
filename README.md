@@ -29,3 +29,5 @@ cargo test --locked
 [Usage guide](docs/getting-started.md)
 
 [Schemas](schemas) · [Implementation and public interfaces](src) · [Verification cases](tests) · [Contributing](CONTRIBUTING.md) · [Security reporting](SECURITY.md) · [License](LICENSE) · [Attribution notices](NOTICE)
+
+Dependency updates: [repository policy](docs/dependency-updates.md).
